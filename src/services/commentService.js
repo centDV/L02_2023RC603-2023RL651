@@ -1,4 +1,3 @@
-// src/services/commentService.js
 const { pool } = require('../config/db.config');
 
 class CommentService {
@@ -57,6 +56,35 @@ class CommentService {
         return result.rowCount > 0;
     }
 
+    async filterByPublicacion(publicacionId) {
+        const query = `
+            select 
+                c.comentarioid, 
+                c.comentario, 
+                u.nombre || ' ' || u.apellido as autor_comentario
+            from comentarios c
+            join usuarios u on c.usuarioid = u.usuarioid
+            where c.publicacionid = $1
+            order by c.comentarioid asc
+        `;
+        const result = await pool.query(query, [publicacionId]);
+        return result.rows;
+    }
+
+    async filterByUsuario(usuarioId) {
+        const query = `
+            select 
+                c.comentarioid, 
+                c.comentario, 
+                p.titulo as titulo_publicacion
+            from comentarios c
+            join publicaciones p on c.publicacionid = p.publicacionid
+            where c.usuarioid = $1
+            order by c.comentarioid desc
+        `;
+        const result = await pool.query(query, [usuarioId]);
+        return result.rows;
+    }
 }
 
 module.exports = new CommentService();

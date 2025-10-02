@@ -1,3 +1,4 @@
+// src/services/userService.js
 const { pool } = require('../config/db.config');
 
 class UserService {
@@ -41,6 +42,36 @@ class UserService {
     async deleteUser(id) {
         const result = await pool.query('delete from usuarios where usuarioid = $1', [id]);
         return result.rowCount > 0;
+    }
+    
+    async filterByNombre(nombre) {
+        const result = await pool.query('select usuarioid, nombreusuario, nombre, apellido from usuarios where nombre ilike $1', [`%${nombre}%`]);
+        return result.rows;
+    }
+
+    async filterByApellido(apellido) {
+        const result = await pool.query('select usuarioid, nombreusuario, nombre, apellido from usuarios where apellido ilike $1', [`%${apellido}%`]);
+        return result.rows;
+    }
+
+    async filterByRol(rolIdentifier) {
+        let sql;
+        let value;
+
+        if (!isNaN(Number(rolIdentifier))) {
+            sql = 'select u.usuarioid, u.nombreusuario, u.nombre, u.apellido from usuarios u where u.rolid = $1';
+            value = [Number(rolIdentifier)];
+        } else {
+            sql = `
+                select u.usuarioid, u.nombreusuario, u.nombre, u.apellido 
+                from usuarios u 
+                join roles r on u.rolid = r.rolid 
+                where r.rol ilike $1
+            `;
+            value = [rolIdentifier];
+        }
+        const result = await pool.query(sql, value);
+        return result.rows;
     }
 
     async getTopN(n) {

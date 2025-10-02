@@ -56,6 +56,20 @@ class RatingService {
         return result.rowCount > 0;
     }
 
+    async filterByPublicacion(publicacionId) {
+        const query = `
+            select 
+                c.calificacionid, 
+                c.calificacion, 
+                u.nombre || ' ' || u.apellido as autor_calificacion
+            from calificaciones c
+            join usuarios u on c.usuarioid = u.usuarioid
+            where c.publicacionid = $1
+            order by c.calificacionid asc
+        `;
+        const result = await pool.query(query, [publicacionId]);
+        return result.rows;
+    }
 }
 
 module.exports = new RatingService();

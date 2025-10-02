@@ -4,11 +4,12 @@ const { validateRatingCreation, validateRatingUpdate } = require('../middleware/
 
 const router = express.Router();
 
-
 router.get('/', ratingController.getAll); 
 router.get('/:id', ratingController.getById); 
 router.post('/', validateRatingCreation, ratingController.create);
 router.put('/:id', validateRatingUpdate, ratingController.update);
 router.delete('/:id', ratingController.delete);
+
+router.get('/filtro/publicacion/:publicacionId', ratingController.filterByPublicacion);
 
 module.exports = router;

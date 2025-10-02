@@ -60,6 +60,30 @@ class CommentController {
             next(error);
         }
     }
+
+    async filterByPublicacion(req, res, next) {
+        try {
+            const pubId = parseInt(req.params.publicacionId);
+            if (isNaN(pubId)) return res.status(400).json({ message: "ID de publicación inválido." });
+            
+            const comments = await commentService.filterByPublicacion(pubId);
+            res.json(comments);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async filterByUsuario(req, res, next) {
+        try {
+            const userId = parseInt(req.params.usuarioId);
+            if (isNaN(userId)) return res.status(400).json({ message: "ID de usuario inválido." });
+
+            const comments = await commentService.filterByUsuario(userId);
+            res.json(comments);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new CommentController();

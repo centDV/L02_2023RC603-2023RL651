@@ -61,6 +61,33 @@ class UserController {
         }
     }
 
+    async filterByNombre(req, res, next) {
+        try {
+            const users = await userService.filterByNombre(req.params.nombre);
+            res.json(users);
+        } catch (error) {
+            next(error);
+        }
+    }
+    
+    async filterByApellido(req, res, next) {
+        try {
+            const users = await userService.filterByApellido(req.params.apellido);
+            res.json(users);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async filterByRol(req, res, next) {
+        try {
+            const users = await userService.filterByRol(req.params.rolIdentifier);
+            res.json(users);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async getTopNComentaristas(req, res, next) {
         try {
             const n = parseInt(req.params.n);

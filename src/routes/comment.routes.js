@@ -10,4 +10,7 @@ router.post('/', validateCommentCreation, commentController.create);
 router.put('/:id', validateCommentUpdate, commentController.update);
 router.delete('/:id', commentController.delete);
 
+router.get('/filtro/publicacion/:publicacionId', commentController.filterByPublicacion);
+router.get('/filtro/usuario/:usuarioId', commentController.filterByUsuario);
+
 module.exports = router;
